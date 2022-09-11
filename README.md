@@ -1,18 +1,26 @@
-# CopyCat-Docker
+# ASLRT-Docker
 
-This is the repo that contains instructions to create the environment for the CopyCat Project.
+This is the repo that contains instructions to create the environment for the ASLRT Project.
 
-These are the main dependencies of the CopyCat environment:
+These are the main dependencies of the ASLRT environment:
 
 - Python 3.8 (via Miniconda)
 - OpenCV (built with `cmake` to include GPU support)
+<<<<<<< HEAD
 - CUDA 10.2
 - cuDNN 8
+=======
+- CUDA
+- cuDNN
+>>>>>>> 3de9058d920466ed2d48be8345e2582f9208a9a6
 - HTK
 - ESPnet (contains PyTorch with GPU support)
 - Tensorflow (with GPU Support)
 - Kaldi (with GPU Support)
 - Azure Kinect SDK
+- TensorFlow 2.9
+- PyTorch 1.11 (from ESPnet)
+- Other Python Dependencies (NumPy, pandas, etc.)
 
 It is recommended to simply pull the docker image from Docker Hub. Here is the link to the Docker Hub Repository for CopyCat: [https://hub.docker.com/r/gurudesh/copycat](https://hub.docker.com/r/gurudesh/copycat)
 
