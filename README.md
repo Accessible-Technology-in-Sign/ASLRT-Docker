@@ -11,7 +11,7 @@ These are the main dependencies of the ASLRT environment:
 - HTK
 - ESPnet (contains PyTorch with GPU support)
 - Tensorflow (with GPU Support)
-- Kaldi (with GPU Support) (under /espnet/tools)
+- Kaldi (with GPU Support) (under `/espnet/tools`)
 - Azure Kinect SDK
 - TensorFlow 2.9
 - PyTorch 1.11 (from ESPnet)
