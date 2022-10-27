@@ -4,7 +4,6 @@ FROM ubuntu:18.04
 RUN rm -f /etc/apt/sources.list.d/cuda.list && \
     rm -f /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update && apt-get upgrade -y &&\
-    # Install Overall Dependencies
     apt-get install -y --no-install-recommends \
         g++ \
         make \
@@ -30,14 +29,11 @@ RUN rm -f /etc/apt/sources.list.d/cuda.list && \
         nano \
         libfreetype6-dev \
         software-properties-common \
-    # Install Dependencies for HTK
     && apt-get update && apt-get upgrade -y && apt-get install -y libc6-dev-i386 \
         ksh \
         bc \
         libx11-dev \
-        # Since Guru has a Windows Computer, he needs to convert the Windows Line Endings to Unix Line Endings
         dos2unix \ 
-    # Install Dependencies for OpenCV
     && apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-pip \
         build-essential \
@@ -60,12 +56,9 @@ RUN rm -f /etc/apt/sources.list.d/cuda.list && \
         libswscale-dev \
         libeigen3-dev \
         libgtk2.0-dev \
-        # Installs numpy for Python 2.7
         python-numpy \
-        # ESPnet only works for Python 3.7 and above -- installing 3.8 because Python 3.7 failed for the "pip install -e ." command
         python3-dev \ 
         python3-pip \
-    # Install dependencies for ESPnet
     && apt-get update && apt-get upgrade -y && apt-get -y install --no-install-recommends \ 
         apt-utils \
         gawk \
@@ -75,15 +68,14 @@ RUN rm -f /etc/apt/sources.list.d/cuda.list && \
         unzip \
         wget \
         zip \
-        # Needed for installation of phonemizer (used by ESPnet)
         libncurses5-dev \
         libncursesw5-dev \
+    && add-apt-repository ppa:git-core/ppa -y && \
+    apt-get install git -y && \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 # -----------------------------------------------------------------------
 
 # -------------------------------Python Setup----------------------------
-RUN add-apt-repository ppa:git-core/ppa -y && apt-get update && apt-get install git -y
-
 # Install Miniconda
 ENV CONDA_DIR /opt/conda
 RUN rm -rf /opt/conda && \
