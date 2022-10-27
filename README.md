@@ -7,11 +7,11 @@ These are the main dependencies of the ASLRT environment:
 - Python 3.8 (via Miniconda)
 - OpenCV (built with `cmake` to include GPU support)
 - CUDA 10.2
-- cuDNN 8
+- cuDNN 7, 8
 - HTK
 - ESPnet (contains PyTorch with GPU support)
 - Tensorflow (with GPU Support)
-- Kaldi (with GPU Support) (under `/espnet/tools`)
+- Kaldi (with GPU Support)
 - Azure Kinect SDK
 - TensorFlow 2.9
 - PyTorch 1.11 (from ESPnet)
