@@ -43,9 +43,9 @@ RUN rm -rf /opt/conda && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda
 ENV PATH=$CONDA_DIR/bin:$PATH
 
-RUN sh /opt/conda/etc/profile.d/conda.sh && \
+RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda deactivate && \
-    conda create -yn base && \
+    conda activate base && \
     conda install -y conda "python=3.8" && \
     conda install -y pip setuptools && \
     python3 -m pip install absl-py==1.2.0 \
@@ -98,6 +98,8 @@ RUN dos2unix prepare && chmod +x prepare && ./prepare
 # -----------------------------------------------------------------------
 
 # ---------------------------------Kaldi---------------------------------
+WORKDIR /
+
 RUN git clone https://github.com/kaldi-asr/kaldi.git && \
     # Ran the check_dependencies.sh script to check dependencies and saw that this needed to be run
     ./kaldi/tools/extras/install_mkl.sh && \
