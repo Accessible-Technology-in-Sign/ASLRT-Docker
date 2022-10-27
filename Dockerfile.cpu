@@ -1,11 +1,37 @@
 FROM ubuntu:18.04
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y libc6-dev-i386 \
-        ksh \
-        bc \
-        libx11-dev \
-        # Since Guru has a Windows Computer, he needs to convert the Windows Line Endings to Unix Line Endings
-        dos2unix
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    g++ \
+    make \
+    cmake \
+    automake \
+    autoconf \
+    bzip2 \
+    unzip \
+    wget \
+    sox \
+    libtool \
+    subversion \
+    zlib1g-dev \
+    gfortran \
+    ca-certificates \
+    patch \
+    ffmpeg \
+    libsndfile1-dev \
+    flac \
+    vim \
+    curl \
+    nkf \
+    nano \
+    libfreetype6-dev \
+    software-properties-common \
+    libc6-dev-i386 \
+    ksh \
+    bc \
+    libx11-dev \
+    software-properties-common\
+    # Since Guru has a Windows Computer, he needs to convert the Windows Line Endings to Unix Line Endings
+    dos2unix
 
 # -------------------------------Python Setup----------------------------
 RUN add-apt-repository ppa:git-core/ppa -y && apt-get update && apt-get install git -y
