@@ -110,9 +110,9 @@ COPY ./prepare ./htk/prepare
 # Deleted LetterLevel and WordLevel folders because they are not used in this project
 
 WORKDIR /htk
-RUN dos2unix prepare && chmod +x prepare
+
 # This prepare script is where htk is built from scratch
-RUN ./prepare
+RUN dos2unix prepare && chmod +x prepare && ./prepare
 
 # -----------------------------------------------------------------------
 
