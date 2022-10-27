@@ -1,0 +1,88 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y libc6-dev-i386 \
+        ksh \
+        bc \
+        libx11-dev \
+        # Since Guru has a Windows Computer, he needs to convert the Windows Line Endings to Unix Line Endings
+        dos2unix
+
+# -------------------------------Python Setup----------------------------
+RUN add-apt-repository ppa:git-core/ppa -y && apt-get update && apt-get install git -y
+
+# Install Miniconda
+ENV CONDA_DIR /opt/conda
+RUN rm -rf /opt/conda && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+ENV PATH=$CONDA_DIR/bin:$PATH
+
+RUN sh /opt/conda/etc/profile.d/conda.sh && \
+    conda deactivate && \
+    conda create -yn base && \
+    conda install -y conda "python=3.8" && \
+    conda install -y pip setuptools && \
+    python3 -m pip install absl-py==1.2.0 \
+    attrs==22.1.0 \
+    charset-normalizer==2.1.1 \
+    cycler==0.11.0 \
+    decorator==4.4.2 \
+    dill==0.3.5.1 \
+    fonttools==4.37.1 \
+    idna==3.3 \
+    imageio==2.21.2 \
+    imageio-ffmpeg==0.4.7 \
+    joblib==1.2.0 \
+    kiwisolver==1.4.4 \
+    matplotlib==3.5.3 \
+    mediapipe==0.8.11 \
+    moviepy==1.0.3 \
+    multiprocess==0.70.13 \
+    numpy==1.21.4 \
+    opencv-contrib-python==4.6.0.66 \
+    packaging==20.9 \
+    pandas==1.5.0 \
+    Pillow==9.2.0 \
+    proglog==0.1.10 \
+    protobuf==3.20.0 \
+    pyparsing==3.0.9 \
+    python-dateutil==2.8.2 \
+    pytz==2022.2.1 \
+    requests==2.28.1 \
+    scikit-learn==1.1.2 \
+    scipy==1.9.1 \
+    six==1.16.0 \
+    threadpoolctl==3.1.0 \
+    tqdm==4.64.1 \
+    urllib3==1.26.12 
+
+# -----------------------------------------------------------------------
+
+# ---------------------------------HTK-----------------------------------
+COPY ./htk ./htk
+COPY ./gt2k ./gt2k
+COPY ./prepare ./htk/prepare
+# Deleted LetterLevel and WordLevel folders because they are not used in this project
+
+WORKDIR /htk
+
+# This prepare script is where htk is built from scratch
+RUN dos2unix prepare && chmod +x prepare && ./prepare
+
+# -----------------------------------------------------------------------
+
+# ---------------------------------Kaldi---------------------------------
+RUN git clone https://github.com/kaldi-asr/kaldi.git && \
+    # Ran the check_dependencies.sh script to check dependencies and saw that this needed to be run
+    ./kaldi/tools/extras/install_mkl.sh && \
+    cd kaldi/tools && \
+    # Could not use -j due to packages not compiling. Removing -j fixed the issue: https://github.com/kaldi-asr/kaldi/issues/3987
+    # Added -j back since I had Ebisu's RAM to use
+    make -j "$(($(($((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) < $(nproc) ? $((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) : $(nproc)))>1 ? $(($((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) < $(nproc) ? $((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) : $(nproc))) : 1))" && \
+    ./extras/install_irstlm.sh && \
+    cd ../src && \
+    # Run configure script with the fix from this source: https://github.com/kaldi-asr/kaldi/issues/4391
+    ./configure && \
+    make -j clean depend && \
+    make -j "$(($(($((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) < $(nproc) ? $((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) : $(nproc)))>1 ? $(($((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) < $(nproc) ? $((`free -g | grep '^Mem:' | grep -o '[^ ]*$'`/2)) : $(nproc))) : 1))"
+# -----------------------------------------------------------------------
