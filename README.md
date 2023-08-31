@@ -315,3 +315,5 @@ yarl==1.8.1
 youtube-dl==2021.12.17
 zipp==3.8.1
 ```
+
+To use the latest version of Mediapipe, make sure to run `pip install -U mediapipe`. This was done for the NeurIPS 2023 paper on the PopSignAI Dataset
